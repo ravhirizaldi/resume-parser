@@ -4,34 +4,100 @@ var _ = require('underscore');
 
 module.exports = {
   titles: {
-    objective: ['objective', 'objectives'],
-    summary: ['summary'],
-    technology: ['technology', 'technologies'],
-    experience: ['experience'],
-    education: ['education'],
-    skills: ['skills', 'Skills & Expertise', 'technology', 'technologies'],
-    languages: ['languages'],
-    courses: ['courses'],
-    projects: ['projects'],
-    links: ['links'],
-    contacts: ['contacts'],
-    positions: ['positions', 'position'],
+    objective: [
+      'objective',
+      'objectives',
+      'objektif',
+      'tujuan',
+      'tujuan kerja',
+    ],
+    summary: ['summary', 'ringkasan', 'profil', 'profil singkat'],
+    technology: [
+      'technology',
+      'technologies',
+      'teknologi',
+      'teknologi yang dikuasai',
+    ],
+    experience: [
+      'experience',
+      'work experience',
+      'pengalaman kerja',
+      'pengalaman',
+    ],
+    education: ['education', 'pendidikan', 'riwayat pendidikan'],
+    skills: [
+      'skills',
+      'Skills & Expertise',
+      'technology',
+      'technologies',
+      'kemahiran',
+      'kemahiran teknikal',
+      'kemampuan',
+      'kemampuan teknikal',
+      'keahlian',
+      'keahlian teknikal',
+    ],
+    languages: ['languages', 'bahasa', 'bahasa yang dikuasai'],
+    courses: [
+      'courses',
+      'pelatihan',
+      'pelatihan yang diikuti',
+      'kursus',
+      'kursus yang diikuti',
+    ],
+    projects: [
+      'projects',
+      'project',
+      'proyek',
+      'proyek yang pernah dikerjakan',
+    ],
+    links: ['links', 'link', 'tautan', 'tautan'],
+    contacts: ['contacts', 'contact', 'kontak', 'kontak yang bisa dihubungi'],
+    positions: [
+      'positions',
+      'position',
+      'posisi',
+      'posisi yang pernah dipegang',
+    ],
     profiles: [
       'profiles',
       'social connect',
       'social-profiles',
       'social profiles',
+      'social media',
+      'social-media',
+      'profil sosial',
+      'profil media sosial',
+      'profil',
     ],
-    awards: ['awards'],
+    awards: ['awards', 'penghargaan', 'prestasi'],
     honors: ['honors'],
-    additional: ['additional'],
-    certification: ['certification', 'certifications'],
-    interests: ['interests'],
+    additional: [
+      'additional',
+      'additional information',
+      'informasi tambahan',
+      'other',
+      'lainnya',
+      'others',
+    ],
+    certification: [
+      'certification',
+      'certifications',
+      'sertifikasi',
+      'sertifikat',
+    ],
+    interests: ['interests', 'hobbies', 'hobi', 'minat'],
   },
   profiles: [
     [
       'github.com',
       function(url, Resume, profilesWatcher) {
+        //if not contain http or https add https
+        const regex = /^(http|https):\/\//;
+        if (!regex.test(url)) {
+          url = 'https://' + url;
+        }
+
         download(url, function(data, err) {
           if (data) {
             var $ = cheerio.load(data),
@@ -162,7 +228,22 @@ module.exports = {
 
 // helper method
 function download(url, callback) {
-  request(url, function(error, response, body) {
+  //if url not contain http or https add https
+  const regex = /^(http|https):\/\//;
+  if (!regex.test(url)) {
+    url = 'https://' + url;
+  }
+
+  const headers = {
+    accept:
+      'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'accept-encoding': 'gzip, deflate, sdch, br',
+    'accept-language': 'en-US,en;q=0.8,ms;q=0.6',
+    'user-agent':
+      'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0',
+  };
+
+  request({ url, headers }, function(error, response, body) {
     if (!error && response.statusCode == 200) {
       callback(body);
     } else {

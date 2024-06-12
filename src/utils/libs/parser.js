@@ -155,9 +155,28 @@ function parseDictionaryRegular(data, Resume) {
 
   _.forEach(regularDictionary, function(expressions, key) {
     _.forEach(expressions, function(expression) {
-      find = new RegExp(expression).exec(data);
+      find = new RegExp(expression, 'm').exec(data);
       if (find) {
-        Resume.addKey(key.toLowerCase(), find[0]);
+        if (key.toLowerCase() === 'name') {
+          console.log('name', find[0]);
+          const fullName = find[0].trim();
+          const nameParts = fullName.split(' ');
+          const shortName = nameParts.slice(0, 2).join(' '); // Join the first two parts for the short name
+          Resume.addKey(key.toLowerCase(), shortName);
+        } else if (key.toLowerCase() === 'address') {
+          let address = find[0].trim();
+          console.log('address', address);
+          // Replace phone number with an empty string
+          address = address.replace(dictionary.regular.phone[0], '').trim();
+
+          if (address.split(',').length > 1) {
+            const addressParts = address.split(',');
+            address = addressParts.slice(0, addressParts.length - 1).join(',');
+          }
+          Resume.addKey(key.toLowerCase(), address);
+        } else {
+          Resume.addKey(key.toLowerCase(), find[0]);
+        }
       }
     });
   });

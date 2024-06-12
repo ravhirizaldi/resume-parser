@@ -27,6 +27,7 @@ module.exports = {
       'riwayat kerja',
       'riwayat pekerjaan',
       'pengalaman kerja terakhir',
+      'professional experience',
     ],
     education: ['education', 'pendidikan', 'riwayat pendidikan'],
     skills: [
@@ -238,9 +239,16 @@ module.exports = {
     skype: 'skype',
   },
   regular: {
-    name: [/([A-Z][a-z]*)(\s[A-Z][a-z]*)/],
+    name: [
+      /^[A-Z][a-z]*\s[A-Z]\.[A-Za-z]*|^[A-Z][a-z]*\s[A-Z][a-z]*|^[A-Z]+\s[A-Z]+[a-z]*|^[A-Z][a-z]*\s[A-Z][a-z]*\s[A-Z][a-z]*/,
+    ],
     email: [/([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})/],
-    phone: [/((?:\+?\d{1,3}[\s-])?\(?\d{2,3}\)?[\s.-]?\d{3}[\s.-]\d{4,5})/],
+    phone: [
+      /((?:\+?\d{1,3}[\s-]?)?\(?\d{2,3}\)?[\s.-]?\d{2,4}[\s.-]?\d{2,4}[\s.-]?\d{2,4})|((?:\(\+\d{2,3}\)|\+?\d{2,3})\s?\d{2,4}[\s.-]?\d{2,4}[\s.-]?\d{2,4})/,
+    ],
+    address: [
+      /^[A-Z][a-z\s,]+(?:,\s[A-Za-z\s]+)*?(?=\b[A-Za-z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b|$)/,
+    ],
   },
 };
 
@@ -258,7 +266,7 @@ function download(url, callback) {
     'accept-encoding': 'gzip, deflate, sdch, br',
     'accept-language': 'en-US,en;q=0.8,ms;q=0.6',
     'user-agent':
-      'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0',
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36',
   };
 
   request({ url, headers }, function(error, response, body) {

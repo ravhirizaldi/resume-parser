@@ -5,6 +5,7 @@ const path = require('path'),
   mime = require('mime-types'),
   fs = require('fs'),
   logger = require('tracer').colorConsole();
+  const dictionary = require('../../dictionary.js');
 
 module.exports.runFile = processFile;
 module.exports.runUrl = processUrl;
@@ -139,10 +140,47 @@ PreparedFile.prototype.saveResume = function(path, cbSavedResume) {
   }
 
   if (fs.statSync(path).isDirectory() && this.resume) {
-    fs.writeFile(
-      path + '/' + this.name + '.json',
-      this.resume.jsoned(),
-      cbSavedResume
-    );
-  }
+    //open file
+      const resume = this.resume;
+      
+
+      //count dictionary objects and subobjects
+      let dictionaryCount = 0;
+
+      for (let key in dictionary) {
+        for (let subkey in dictionary[key]) {
+          if (dictionary[key].hasOwnProperty(subkey)) {
+            dictionaryCount++;
+          }
+        }
+      }
+
+      //count resume objects (resume.parts)
+      let resumeCount = 0;
+
+      for (let key in resume.parts) {
+        if (resume.parts.hasOwnProperty(key)) {
+          resumeCount++;
+        }
+      }
+
+      //percentage of resume objects to dictionary objects
+      let percentage = (resumeCount / (dictionaryCount - 10)) * 100;
+
+      //add to resume object
+      const resumeData = {
+        resume: resume.parts,
+        resumeCount: resumeCount,
+        dictionaryCount: (dictionaryCount - 10),
+        //decimal 2
+        score: Math.round(percentage * 100) / 100,
+        stars: Math.round(percentage * 5) / 100,
+      };
+
+      fs.writeFile(
+        path + '/' + this.name + '.json',
+        JSON.stringify(resumeData, null, 2),
+        cbSavedResume
+      );
+    }
 };
